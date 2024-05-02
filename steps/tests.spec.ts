@@ -1,10 +1,12 @@
 import { test, expect } from '@playwright/test';
 import fs from "fs";
 import {parse} from "csv-parse/sync";
- 
+import { createBdd } from 'playwright-bdd';
+const { Given, When, Then } = createBdd();
  const data = parse(fs.readFileSync("TestData.csv"), {columns:true, skip_empty_lines:true});
-
- test('going to page', async ({ page }) => {
+ 
+ 
+ Given ('I am on Swag Labs homepage', async ({ page }) => {
     await page.goto('https://www.saucedemo.com/');
   
     await expect(page).toHaveTitle('Swag Labs');
@@ -12,7 +14,7 @@ import {parse} from "csv-parse/sync";
     
   });
 
-  test('log in', async ({ page }) => {
+  When ("I log in", async ({ page }) => {
       await page.goto('https://www.saucedemo.com/');
       await expect(page).toHaveTitle('Swag Labs');
       await page.getByPlaceholder('Username').fill('standard_user');
@@ -20,7 +22,7 @@ import {parse} from "csv-parse/sync";
       await page.getByRole('button', { name: /login/i }).click();
   });
 
-  test('add to cart and validation', async ({ page }) => {
+  Then("I add stuff to cart", async ({ page }) => {
     await page.goto('https://www.saucedemo.com/');
     await expect(page).toHaveTitle('Swag Labs');
     await page.getByPlaceholder('Username').fill('standard_user');
@@ -41,7 +43,7 @@ import {parse} from "csv-parse/sync";
     
   });
 
-  test('go to cart', async ({ page }) => {
+  Given ("I am going to cart", async ({ page }) => {
     await page.goto('https://www.saucedemo.com/');
     await expect(page).toHaveTitle('Swag Labs');
     await page.getByPlaceholder('Username').fill('standard_user');
@@ -64,7 +66,7 @@ import {parse} from "csv-parse/sync";
   });
 
 
-  test('remove shirt', async ({ page }) => {
+  When ('I remove T-Shirt', async ({ page }) => {
     await page.goto('https://www.saucedemo.com/');
     await expect(page).toHaveTitle('Swag Labs');
     await page.getByPlaceholder('Username').fill('standard_user');
@@ -89,7 +91,7 @@ import {parse} from "csv-parse/sync";
   });
 
 
-  test('checkout', async ({ page }) => {
+  Then ('I check out', async ({ page }) => {
     await page.goto('https://www.saucedemo.com/');
     await expect(page).toHaveTitle('Swag Labs');
     await page.getByPlaceholder('Username').fill('standard_user');
@@ -103,8 +105,8 @@ import {parse} from "csv-parse/sync";
         await page.locator("[id='" + item.CartID +"']").click();
         
       }
-      catch {
-        console.log("The Product " + item.Products + " does not exist on the website.");
+      catch(error) {
+        console.log(error.message)
       }
     }
     await page.locator('xpath=//*[@id="shopping_cart_container"]/a').click();
@@ -114,7 +116,7 @@ import {parse} from "csv-parse/sync";
     
   });
 
-  test('info', async ({ page }) => {
+  Given('I put my personal information', async ({ page }) => {
     await page.goto('https://www.saucedemo.com/');
     await expect(page).toHaveTitle('Swag Labs');
     await page.getByPlaceholder('Username').fill('standard_user');
@@ -143,7 +145,7 @@ import {parse} from "csv-parse/sync";
     await page.locator("[id='continue']").click();
   });
 
-  test('check price', async ({ page }) => {
+  When('I finished shopping', async ({ page }) => {
     await page.goto('https://www.saucedemo.com/');
     await expect(page).toHaveTitle('Swag Labs');
     await page.getByPlaceholder('Username').fill('standard_user');
@@ -183,7 +185,7 @@ import {parse} from "csv-parse/sync";
     }
   });
 
-  test('logout', async ({ page }) => {
+  Then('I check out', async ({ page }) => {
     await page.goto('https://www.saucedemo.com/');
     await expect(page).toHaveTitle('Swag Labs');
     await page.getByPlaceholder('Username').fill('standard_user');
